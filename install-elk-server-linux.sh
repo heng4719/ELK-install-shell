@@ -37,8 +37,8 @@ then
     rm -rf $KIBANA
 fi
 
-tar -zxvf elasticsearch-7.6.2-linux-x86_64.tar.gz
-cd elasticsearch-7.6.2/
+tar -zxvf elasticsearch-7.6.2-linux-x86_64.tar.gz -C $MY_SOFTS/
+cd $MY_SOFTS/elasticsearch-7.6.2/
 
 cat >> /usr/local/mysofts/elasticsearch-7.6.2/config/elasticsearch.yml <<"EOF"
 cluster.name: myCluster
@@ -54,8 +54,8 @@ EOF
 
 
 cd $MY_SOFTS
-tar -zxvf logstash-7.6.2.tar.gz
-cd logstash-7.6.2/
+tar -zxvf logstash-7.6.2.tar.gz -C $MY_SOFTS/
+cd $MY_SOFTS/logstash-7.6.2/
 touch elk.conf
 cat >> /usr/local/mysofts/logstash-7.6.2/elk.conf <<"EOF"
 input { 

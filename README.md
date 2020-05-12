@@ -6,6 +6,7 @@
 环境要求：
 1. JDK1.8+
 2. 脚本会创建一个名为elk的用户，并将ELK文件夹赋权限给这个用户。
+3. ELK将需要2G以上的内存空间，你也可以手动到Elasticsearch和Logstash的config里面的jvm.options文件中修改
 
 所需端口：
 9200（elasticsearch）、5601（kibana）
