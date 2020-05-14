@@ -1,18 +1,12 @@
-<<!
- **********************************************************
- * Author        : zhangdali
- * Email         : 986472954@qq.com
- * Last modified : 2020-05-12 09:25
- * Filename      : install-elk-server-linux.sh
- * Description   : 一键安装ELK 7.6.2
- * *******************************************************
-!
 #!/bin/bash
 
 MY_SOFTS=/usr/local/mysofts
 ELAS=elasticsearch-7.6.2
+ELAS_TAR=elasticsearch-7.6.2-linux-x86_64.tar.gz
 LOGS=logstash-7.6.2
+LOGS_TAR=logstash-7.6.2.tar.gz
 KIBANA=kibana-7.6.2
+KIBANA_TAR=kibana-7.6.2-linux-x86_64.tar.gz
 ELAS_DATA=/data/es-data
 ELAS_LOG=/var/log/elasticsearch
 
@@ -23,23 +17,32 @@ mkdir -p $ELAS_LOG
 cd $MY_SOFTS
 if [ -e $ELAS ]
 then
-    echo "删除已存在的elasticsearch-7.6.2"
     rm -rf $ELAS
 fi
 if [ -e $LOGS ]
 then
-    echo "删除已存在的logstash-7.6.2"
     rm -rf $LOGS
 fi
 if [ -e $KIBANA-linux-x86_64 ]
 then
-    echo "删除已存在的kibana-7.6.2"
     rm -rf $KIBANA
 fi
+if [ -e $ELAS_TAR ]
+then
+    rm -rf $ELAS_TAR
+fi
+if [ -e $LOGS_TAR ]
+then
+    rm -rf $LOGS_TAR
+fi
+if [ -e $KIBANA_TAR ]
+then
+    rm -rf $KIBANA_TAR
+fi
 
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.6.2-linux-x86_64.tar.gz
 tar -zxvf elasticsearch-7.6.2-linux-x86_64.tar.gz -C $MY_SOFTS/
 cd $MY_SOFTS/elasticsearch-7.6.2/
-
 cat >> /usr/local/mysofts/elasticsearch-7.6.2/config/elasticsearch.yml <<"EOF"
 cluster.name: myCluster
 node.name: node-1
@@ -54,16 +57,13 @@ EOF
 
 
 cd $MY_SOFTS
+wget https://artifacts.elastic.co/downloads/logstash/logstash-7.6.2.tar.gz
 tar -zxvf logstash-7.6.2.tar.gz -C $MY_SOFTS/
 cd $MY_SOFTS/logstash-7.6.2/
 touch elk.conf
 cat >> /usr/local/mysofts/logstash-7.6.2/elk.conf <<"EOF"
 input { 
-    stdin { } 
-    file{
-        path => "/usr/local/myapps/ttg-server/nohup.out"
-        start_position => "beginning"
-    } 
+    stdin { }
 }
 output {
   elasticsearch { hosts => ["127.0.0.1:9200"] }
@@ -72,6 +72,7 @@ output {
 EOF
 
 cd $MY_SOFTS
+wget https://artifacts.elastic.co/downloads/kibana/kibana-7.6.2-linux-x86_64.tar.gz
 tar -zxvf kibana-7.6.2-linux-x86_64.tar.gz
 cd kibana-7.6.2-linux-x86_64/
 cat >> /usr/local/mysofts/kibana-7.6.2-linux-x86_64/config/kibana.yml <<"EOF"

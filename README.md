@@ -3,36 +3,36 @@
 
 
 
-环境要求：
+环境要求与影响说明：
 1. JDK1.8+
-2. 脚本会创建一个名为elk的用户，并将ELK文件夹赋权限给这个用户。
+2. 脚本会创建一个名为elk的用户，并将ELK文件夹的权限赋给这个用户。
 3. ELK将需要2G以上的内存空间，你也可以手动到Elasticsearch和Logstash的config里面的jvm.options文件中修改
 
 所需端口：
 9200（elasticsearch）、5601（kibana）
 
 所需文件：
-1. ELK v7.6.2安装包三件套（elasticsearch、kibana、logstash）
-
-   可以从这里下载：https://pan.baidu.com/s/1LndFYnnZQwFx2-MlDZXdaQ
-   提取码：7qnk
-
-2. 服务端一键安装脚本 install-elk-server-linux.sh
-
-3. ELK运行脚本 elk-e-startup.sh、elk-l-startup.sh、elk-k-startup.sh，分别运行elasticsearch、logstash、kibana。
+1. server-install.sh 服务端安装脚本：下载解压并配置elasticsearch、kibana和logstash
+2. server-run.sh     服务端运行脚本：运行elasticsearch和kibana服务，如需要运行logstash进行测试，可以运行客户端运行脚本
+3. client-install.sh 客户端安装脚本：下载解压并配置logstash
+4. client-run.sh     客户端运行脚本：运行logstash服务
 
 名词说明：
-服务端：安装了elasticsearch、kibana和logstash三个服务的服务器，负责日志的收集、分析和网页显示。
+服务端：安装了elasticsearch、kibana和logstash三个服务的服务器，负责日志的收集、分析、搜索和网页显示。
 客户端：仅安装logstash服务的服务器，负责将本地产生的日志发送给服务端。
 
 操作说明：
-1. 在服务端上传ELK三件套的tar压缩包，然后运行服务端一键安装脚本，此脚本将会解压并配置ELK三件套。
+1. 服务端安装与测试
+    1.1 在打算作为服务端的服务器上运行服务端安装脚本
+    1.2 运行服务端运行脚本，运行成功后可以如下测试
+    1.3 测试elasticsearch： 访问接口 curl http://127.0.0.1:9200/ 正常情况会返回一个json，json最后是一句话 "You Know, for Search"
+    1.4 测试kibana：        浏览器访问 http://IP:5601，正常情况就会进入kibana的页面了，初次进入可能会比较慢。
 
-2. 解压配置完成后，服务端依次运行elk-e-startup.sh、elk-k-startup.sh两个脚本，运行完成后，即可打开 http://服务器IP:5601，进入kibana的初始页面。在服务端，logstash安不安装都可以，你也可以安装来测试一下另外两个是否已经正常工作。
-
-3. 在客户端服务器，运行elk-l-startup.sh脚本，然后编辑elk.conf中input下file里面的path路径为你想要收集的日志路径即可，具体此处的语法可以参考官方文档
-
-4. 然后触发一次日志的生成，这个时候去kibana中查看就能看到刚才的日志了。
+2. 客户端安装与测试
+    2.1 在需要收集日志的服务器上运行客户端安装脚本
+    2.2 安装完成后，需要配置安装目录下的elk.conf文件，将里面的 path => "日志路径" 修改为正确路径，elasticsearch { hosts => ["服务端IP:9200"] }的服务端IP修改为安装服务端程序的服务器IP。
+    2.3 运行客户端运行脚本，运行成功后可以如下测试：
+    2.4 运行成功后终端会等待你的输入或是日志路径中日志的更新。这时输入 "Hello"，他会返回一个json，里面是一些信息和你刚才输入的Hello字符串，接着去kibana页面查看logstash索引下的日志，顺利的话就能看到刚才的那句hello。
 
    
 
